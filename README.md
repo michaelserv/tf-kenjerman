@@ -4,7 +4,7 @@ This repo will create a create your custom EKS environment.
 
 ## Basic Architecture
 
-![Design](.github/img/tf-kenjerman-milestone-1.png)
+![Design](.github/img/tf-kenjerman.png)
 
 ## Built with:
 
