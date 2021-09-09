@@ -42,12 +42,6 @@ variable "public_subnets" {
   default     = ["10.0.4.0/24", "10.0.5.0/24"]
 }
 
-variable "database_subnets" {
-  description = "A list of database subnets."
-  type        = list(any)
-  default     = ["10.0.21.0/24", "10.0.22.0/24"]
-}
-
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks."
   type        = bool

@@ -43,7 +43,6 @@ module "vpc" {
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = var.private_subnets
   public_subnets       = var.public_subnets
-  database_subnets     = var.database_subnets
   enable_nat_gateway   = var.enable_nat_gateway
   single_nat_gateway   = var.single_nat_gateway
   enable_dns_hostnames = var.enable_dns_hostnames
