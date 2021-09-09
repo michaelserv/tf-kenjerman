@@ -31,7 +31,7 @@ $ terraform apply --auto-approve
 ```
 Take note of the output for `state_bucket_id` and `state_bucket_region`. You'll need to update the `main.tf` on each layer with these values. It is not yet possible to have the state bucket values interpolated.
 
-* **Step 3: Create custom VPC environment.** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** created in step 2 as well as the **state_bucket_region**.
+* **Step 3: Create custom VPC environment.** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** (line 10) created in step 2 as well as the **state_bucket_region** (line 12).
 ```shell script
 $ cd ../layers/000base
 $ vi terraform.tfvars
@@ -44,7 +44,7 @@ $ terraform plan
 $ terraform apply --auto-approve
 ```
 
-* **Step 4: Create your compute resources (Bastion).** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** created in step 2 as well as the **state_bucket_region**.
+* **Step 4: Create your compute resources (Bastion).** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** (lines 10 and 37) created in step 2 as well as the **state_bucket_region** (lines 12 and 39).
 ```shell script
 $ cd ../layers/200compute
 $ vi terraform.tfvars
