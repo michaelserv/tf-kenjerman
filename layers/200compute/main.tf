@@ -2,14 +2,14 @@
 # Terraform main config
 ###############################################################################
 terraform {
-  required_version = ">= 0.14"
+  required_version = ">= 1.0.4"
   required_providers {
-    aws = "~> 3.27.0"
+    aws = ">= 3.57.0"
   }
   backend "s3" {
     bucket  = "XXXXXXXXXXXXXX-build-state-bucket-eks" ### UPDATE THE XXXXX WITH YOUR ACCOUNT ID
     key     = "terraform.200compute.tfstate"
-    region  = "XXXXXXXXXXXXXX"                        ### UPDATE THE XXXXX WITH YOUR REGION 
+    region  = "XXXXXXXXXXXXXX"                        ### UPDATE THE XXXXX WITH YOUR REGION
     encrypt = "true"
   }
 }
@@ -55,7 +55,6 @@ locals {
   vpc_id          = data.terraform_remote_state._vpc.outputs.vpc_id
   private_subnets = data.terraform_remote_state._vpc.outputs.private_subnets
   public_subnets  = data.terraform_remote_state._vpc.outputs.public_subnets
-  data_subnets    = data.terraform_remote_state._vpc.outputs.data_subnets
   vpc_cidr_block  = data.terraform_remote_state._vpc.outputs.vpc_cidr_block
   tags = {
     Environment = var.environment
