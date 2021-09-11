@@ -4,7 +4,6 @@ Terraform module which creates [Msk Kafka Cluster](https://aws.amazon.com/msk/) 
 
 ## Inputs
 
-
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | client\_subnets | A list of subnets to connect to in client VPC | `list(string)` | n/a | yes |
@@ -26,6 +25,7 @@ Terraform module which creates [Msk Kafka Cluster](https://aws.amazon.com/msk/) 
 | server\_properties | A map of the contents of the server.properties file. Supported properties are documented in the [MSK Developer Guide](https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration-properties.html). | `map(string)` | `{}` | no |
 | tags | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
 | volume\_size | The size in GiB of the EBS volume for the data drive on each broker node. | `number` | `1000` | no |
+
 ## Outputs
 
 | Name | Description |
