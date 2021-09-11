@@ -7,9 +7,9 @@ terraform {
     aws = ">= 3.57.0"
   }
   backend "s3" {
-    bucket  = "XXXXXXXXXXXXXX-build-state-bucket-eks" ### UPDATE THE XXXXX WITH YOUR ACCOUNT ID
+    bucket  = "130541009828-build-state-bucket-eks" ### UPDATE THE XXXXX WITH YOUR ACCOUNT ID
     key     = "terraform.000base.tfstate"
-    region  = "XXXXXXXXXXXXXX"                        ### UPDATE THE XXXXX WITH YOUR REGION
+    region  = "ap-southeast-2"                        ### UPDATE THE XXXXX WITH YOUR REGION
     encrypt = "true"
   }
 }

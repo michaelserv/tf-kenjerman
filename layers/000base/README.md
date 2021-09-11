@@ -2,6 +2,7 @@
 
 Terraform code to create EKS VPC resources.
 
+# Inputs
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -23,7 +24,7 @@ Terraform code to create EKS VPC resources.
 | enable\_dns\_hostnames | Should be true to enable DNS hostnames in the VPC. | bool | `true` | no |
 | eks\_cluster\_name | Name of the EKS Cluster. | string | `"eks-staging-cluster"` | no |
 
-## Outputs
+## Outputs for VPC
 
 | Name | Description |
 |------|-------------|
