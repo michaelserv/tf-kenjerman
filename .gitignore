@@ -8,3 +8,5 @@
 .terraform.*
 kubeconfig_*
 .env.secrets
+.bkup
+.pdf
