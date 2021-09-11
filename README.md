@@ -4,7 +4,7 @@ This repo will create a create your custom EKS environment.
 
 ## Basic Architecture
 
-![Design](.github/img/tf-kenjerman.png)
+![Design](.github/img/tf-kenjerman-final.png)
 
 ## Built with:
 
@@ -57,9 +57,21 @@ $ terraform plan
 $ terraform apply --auto-approve
 ```
 
+Test from your local machine that you can communicate with the EKS cluster:
+```shell script
+$ aws eks update-kubeconfig --name <your cluster name>
+$ kubectl get nodes
+```
+
+Test from your Bastion Host that you can communicate with the EKS cluster, login to your bastion host:
+```shell script
+$ aws eks update-kubeconfig --name <your cluster name> --region <you region>
+$ kubectl get nodes
+```
+
 * **Step 5: Create your AWS managed services (Elasticsearch, DocumentDB, MSK, RDS and S3 Bucket).** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** (lines 10, 37, and 50) created in step 2 as well as the **state_bucket_region** (lines 12, 39, and 52).
 ```shell script
-$ cd ../layers/100data
+$ cd ../layers/400managedservices
 $ vi terraform.tfvars
 $ vi main.tf
 ```
