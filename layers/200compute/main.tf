@@ -35,9 +35,9 @@ terraform {
     }
   }
   backend "s3" {
-    bucket  = "130541009828-build-state-bucket-eks" ### UPDATE THE XXXXX WITH YOUR ACCOUNT ID
+    bucket  = "XXXXXXXXXXXXXX-build-state-bucket-eks" ### UPDATE THE XXXXX WITH YOUR ACCOUNT ID
     key     = "terraform.200compute.tfstate"
-    region  = "ap-southeast-2"                        ### UPDATE THE XXXXX WITH YOUR REGION
+    region  = "XXXXXXXXXXXXXX"                        ### UPDATE THE XXXXX WITH YOUR REGION
     encrypt = "true"
   }
 }
@@ -62,9 +62,9 @@ data "terraform_remote_state" "_vpc" {
   backend = "s3"
 
   config = {
-    bucket  = "130541009828-build-state-bucket-eks" ### UPDATE THE XXXXX WITH YOUR ACCOUNT ID
+    bucket  = "XXXXXXXXXXXXXX-build-state-bucket-eks" ### UPDATE THE XXXXX WITH YOUR ACCOUNT ID
     key     = "terraform.000base.tfstate"
-    region  = "ap-southeast-2"                        ### UPDATE THE XXXXX WITH YOUR REGION
+    region  = "XXXXXXXXXXXXXX"                        ### UPDATE THE XXXXX WITH YOUR REGION
     encrypt = "true"
   }
 }
