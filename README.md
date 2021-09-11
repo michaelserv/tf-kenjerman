@@ -44,9 +44,22 @@ $ terraform plan
 $ terraform apply --auto-approve
 ```
 
-* **Step 4: Create your compute resources (Bastion).** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** (lines 10 and 37) created in step 2 as well as the **state_bucket_region** (lines 12 and 39).
+* **Step 4: Create your compute resources (Bastion and EKS cluster).** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** (lines 10 and 37) created in step 2 as well as the **state_bucket_region** (lines 12 and 39).
 ```shell script
 $ cd ../layers/200compute
+$ vi terraform.tfvars
+$ vi main.tf
+```
+Create the resources:
+```shell script
+$ terraform init
+$ terraform plan
+$ terraform apply --auto-approve
+```
+
+* **Step 5: Create your AWS managed services (Elasticsearch, DocumentDB, MSK, RDS and S3 Bucket).** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** (lines 10, 37, and 50) created in step 2 as well as the **state_bucket_region** (lines 12, 39, and 52).
+```shell script
+$ cd ../layers/100data
 $ vi terraform.tfvars
 $ vi main.tf
 ```
