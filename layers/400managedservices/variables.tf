@@ -317,48 +317,57 @@ variable "allowed_cidr_blocks" {
 ###############################################################################
 variable "master_password" {
   type = string
+  description = "Password for the master DB user."
 }
 
 variable "master_username" {
   type = string
+  description = "Username for the master DB user."
 }
 
 variable "cluster_instance_class" {
+  description = "The instance class to use."
   type    = string
   default = "db.r5.large"
 }
 
 variable "cluster_instance_count" {
+  description = "Number of instances to spin up per availability_zone."
   type    = number
   default = 1
 }
 
 variable "name" {
   type = string
+  description = "Unique cluster identifier beginning with the specified prefix."
 }
 
 variable "backup_retention_period" {
+  description = "The days to retain backups for."
   default = 7
   type    = number
 }
 
 variable "preferred_backup_window" {
+  description = "The daily time range during which automated backups are created if automated backups are enabled using the BackupRetentionPeriod parameter."
   default = "07:00-09:00"
   type    = string
 }
 
 variable "skip_final_snapshot" {
+  description = "Determines whether a final DB snapshot is created before the DB cluster is deleted."
   default = false
   type    = bool
 }
 
 variable "storage_encrypted" {
+  description = "Specifies whether the DB cluster is encrypted."
   default = true
   type    = bool
 }
 
 variable "parameters" {
-  description = "additional parameters modified in parameter group"
+  description = "additional parameters modified in parameter group."
   type        = list(map(any))
   default     = []
 }
@@ -371,7 +380,7 @@ variable "apply_immediately" {
 
 variable "family" {
   default     = "docdb3.6"
-  description = "Version of docdb family being created"
+  description = "Version of docdb family being created."
   type        = string
 }
 

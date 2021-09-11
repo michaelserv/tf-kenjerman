@@ -1,141 +1,15 @@
 ## Summary
 
-Terraform code to create Hoot resources.
+Terraform code to create your AWS Managed services (Elasticsearch, DocumentDB, MSK, RDS, and S3 bucket).
 
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| aws\_account\_id | (Required) AWS Account ID. | string | n/a | yes |
-| region | (Required) Region where resources will be created. | string | `ap-southeast-2` | yes |
-| environment | (Optional) The name of the environment, e.g. Production, Development, etc. | string | `Development` | yes |
-
-## Inputs for VPC
+# Inputs
+## Inputs for environment
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| vpc\_name | (Required) VPC Name. | string | n/a | yes |
-| vpc\_cidr | (Required) VPC CIDR block. | string | n/a | yes |
-| map\_public\_ip\_on\_launch | (Optional) Specify true to indicate that instances launched into the subnet should be assigned a public IP address. Default is false. | string | `false` | yes |
-| public\_cidr\_a | (Required) Public CIDR block A. | string | n/a | yes |
-| public\_cidr\_b | (Required) Public CIDR block B. | string | n/a | yes |
-| private\_cidr\_a | (Required) Private CIDR block A. | string | n/a | yes |
-| private\_cidr\_b | (Required) Private CIDR block B. | string | n/a | yes |
-
-## Inputs for Security Groups
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| vpc\_id | VPC id where the load balancer and other resources will be deployed. | `string` | `null` | yes |
-| source\_address | (Optional) The address to allow to communicate with ALB. | `string` | `0.0.0.0/0` | no |
-| tags | A map of tags to add to all resources. | `map(string)` | `{}` | no |
-
-## Inputs for ALB
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| access\_logs | Map containing access logging configuration for load balancer. | `map(string)` | `{}` | no |
-| create\_lb | Controls if the Load Balancer should be created | `bool` | `true` | no |
-| drop\_invalid\_header\_fields | Indicates whether invalid header fields are dropped in application load balancers. Defaults to false. | `bool` | `false` | no |
-| enable\_cross\_zone\_load\_balancing | Indicates whether cross zone load balancing should be enabled in application load balancers. | `bool` | `false` | no |
-| enable\_deletion\_protection | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | `bool` | `false` | no |
-| enable\_http2 | Indicates whether HTTP/2 is enabled in application load balancers. | `bool` | `true` | no |
-| extra\_ssl\_certs | A list of maps describing any extra SSL certificates to apply to the HTTPS listeners. Required key/values: certificate\_arn, https\_listener\_index (the index of the listener within https\_listeners which the cert applies toward). | `list(map(string))` | `[]` | no |
-| http\_tcp\_listeners | A list of maps describing the HTTP listeners or TCP ports for this ALB. Required key/values: port, protocol. Optional key/values: target\_group\_index (defaults to http\_tcp\_listeners[count.index]) | `any` | `[]` | no |
-| https\_listener\_rules | A list of maps describing the Listener Rules for this ALB. Required key/values: actions, conditions. Optional key/values: priority, https\_listener\_index (default to https\_listeners[count.index]) | `any` | `[]` | no |
-| https\_listeners | A list of maps describing the HTTPS listeners for this ALB. Required key/values: port, certificate\_arn. Optional key/values: ssl\_policy (defaults to ELBSecurityPolicy-2016-08), target\_group\_index (defaults to https\_listeners[count.index]) | `any` | `[]` | no |
-| idle\_timeout | The time in seconds that the connection is allowed to be idle. | `number` | `60` | no |
-| internal | Boolean determining if the load balancer is internal or externally facing. | `bool` | `false` | no |
-| ip\_address\_type | The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack. | `string` | `"ipv4"` | no |
-| lb\_tags | A map of tags to add to load balancer | `map(string)` | `{}` | no |
-| listener\_ssl\_policy\_default | The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html). | `string` | `"ELBSecurityPolicy-2016-08"` | no |
-| load\_balancer\_create\_timeout | Timeout value when creating the ALB. | `string` | `"10m"` | no |
-| load\_balancer\_delete\_timeout | Timeout value when deleting the ALB. | `string` | `"10m"` | no |
-| load\_balancer\_type | The type of load balancer to create. Possible values are application or network. | `string` | `"application"` | no |
-| load\_balancer\_update\_timeout | Timeout value when updating the ALB. | `string` | `"10m"` | no |
-| name | The resource name and Name tag of the load balancer. | `string` | `null` | no |
-| name\_prefix | The resource name prefix and Name tag of the load balancer. Cannot be longer than 6 characters | `string` | `null` | no |
-| security\_groups | The security groups to attach to the load balancer. e.g. ["sg-edcd9784","sg-edcd9785"] | `list(string)` | `[]` | no |
-| subnet\_mapping | A list of subnet mapping blocks describing subnets to attach to network load balancer | `list(map(string))` | `[]` | no |
-| subnets | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | `null` | no |
-| tags | A map of tags to add to all resources | `map(string)` | `{}` | no |
-| target\_group\_tags | A map of tags to add to all target groups | `map(string)` | `{}` | no |
-| target\_groups | A list of maps containing key/value pairs that define the target groups to be created. Order of these maps is important and the index of these are to be referenced in listener definitions. Required key/values: name, backend\_protocol, backend\_port | `any` | `[]` | no |
-| vpc\_id | VPC id where the load balancer and other resources will be deployed. | `string` | `null` | no |
-
-## Inputs for RDS
-
-| Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| rds\_sg\_id | The Security Group ID for RDS. | `string` | n/a | yes |
-| private\_subnets | The IDs of the Private Subnets. | `list(any)` | n/a | yes |
-| tags | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
-| db\_identifier | The name of the RDS instance. | `string` | n/a | yes |
-| db\_name | The name of the database to create when the DB instance is created. | `string` | `null` | yes |
-| db\_username | Username for the master DB user. | `string` | n/a | yes |
-| db\_password | Password for the master DB user. | `string` | `""` | yes |
-| db\_instance\_class | The instance type of the RDS instance. | `string` | n/a | yes |
-| db\_engine | The database engine to use. | `string` | n/a | yes |
-| db\_engine\_version | The engine version to use. | `string` | n/a | yes |
-| db\_allocated\_storage | The amount of allocated storage. | `string` | n/a | yes |
-| db_multi_az | Does the DB need multi-az for High Availability. | `bool` | `false` | no |
-| backup_retention_period | The days to retain backups for. | `number` | `null` | no |
-| storage_encrypted | Specifies whether the DB instance is encrypted. | `bool` | `true` | no |
-| skip_final_snapshot | Determines whether a final DB snapshot is created before the DB instance is deleted. | `bool` | `true` | no |
-
-## Inputs for ECS (EC2)
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| name | Name of the app. | `string` | n/a | yes |
-| private\_subnets | The IDs of the Private Subnets. | `list(any)` | n/a | yes |
-| ecs\_sg\_id | The Security Group ID for ECS. | `string` | n/a | yes |
-| target\_group\_arn | The ARN of the Target Group. | `string` | n/a | yes |
-| tags | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
-| container\_name | The name of the container. | `string` | n/a | yes |
-| container\_port | The Port number for the container to use. | `number` | n/a | yes |
-| desired\_count | Desired number of tasks to run. | `number` | `1` | no |
-| max\_count\_ec2 | Max number of ec2 to run. | `number` | `3` | no |
-| min\_count\_ec2 | Minimum number of ec2 to run. | `number` | `2` | no |
-| desired\_count\_ec2 | Desired number of ec2 to run. | `number` | `2` | no |
-| ec2\_instance\_type | EC2 instance type to use. | `string` | `"t3.micro"` | no |
-| container\_definitions | A list of valid container definitions provided as a single valid JSON document. | `any` | n/a | yes |
-
-## Inputs for Elasticache
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| parameter | A list of Redis parameters to apply. Note that parameters may differ from one Redis family to another | <pre>list(object({<br>    name  = string<br>    value = string<br>  }))</pre> | `[]` | no |
-| existing\_security\_groups | List of existing Security Group IDs to place the cluster into. | `list(string)` | `[]` | yes |
-| transit\_encryption\_enabled | Whether to enable encryption in transit. If this is enabled, use the [following guide](https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/in-transit-encryption.html#connect-tls) to access redis | `bool` | `true` | no |
-| at\_rest\_encryption\_enabled | Enable encryption at rest | `bool` | `false` | no |
-| engine\_version | Redis engine version | `string` | `"4.0.10"` | no |
-| availability\_zones | Availability zone IDs | `list(string)` | `[]` | no |
-| cluster\_size | Number of nodes in cluster. *Ignored when `cluster_mode_enabled` == `true`* | `number` | `1` | no |
-| instance\_type | Elastic cache instance type | `string` | `"cache.t2.micro"` | no |
-| family | Redis family | `string` | `"redis4.0"` | no |
-| subnets | Subnet IDs | `list(string)` | `[]` | no |
-| vpc\_id | VPC ID | `string` | n/a | yes |
-
-## Inputs for Cloudfront
-
-| Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| domain\_name | The DNS domain name of either the S3 bucket, or web site of your custom origin. | string | n/a | yes |
-| origin\_id | A unique identifier for the origin. | string | n/a | yes |
-| acm\_certificate\_arn | SSL certificate ARN. The certificate must be present in AWS Certificate Manager.. | string | n/a | yes |
-| tags | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
-
-## Inputs for Basion Host
-
-| Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| bastioninstancetype | Bastion Host Instance Type. | `string` | n/a | yes |
-| origin\_id | A unique identifier for the origin. | `string` | `"t3.micro"` | no |
-| ec2keypairbastion | Bastion Host Key Pair. | `string` | n/a | yes |
-| public\_subnets | The IDs of the Public Subnets. | `list(any)` | n/a | yes |
-| bastion\_sg\_id | The Security Group ID for the Bastion Host. | `string` | n/a | yes |
-| tags | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
+| aws\_account\_id | AWS Account ID. | string | n/a | yes |
+| region | Region where resources will be created. | string | `ap-southeast-2` | yes |
+| environment | The name of the environment, e.g. Production, Development, etc. | string | `Development` | yes |
 
 ## Inputs for Elasticsearch
 
@@ -196,59 +70,119 @@ Terraform code to create Hoot resources.
 | iam\_actions | List of actions to allow for the IAM roles, \_e.g.\_ `es:ESHttpGet`, `es:ESHttpPut`, `es:ESHttpPost` | `list(string)` | `[]` | no |
 | allowed\_cidr\_blocks | List of CIDR blocks to be allowed to connect to the cluster. | `list(string)` | `[]` | no |
 
-## Outputs
+## Inputs for DocumentDB
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| apply\_immediately | Specifies whether any cluster modifications are applied immediately, or during the next maintenance window. | bool | `"false"` | no |
+| backup\_retention\_period | The days to retain backups for. | number | `"7"` | no |
+| cluster\_instance\_class | The instance class to use | string | `"db.r5.large"` | no |
+| cluster\_instance\_count | Number of instances to spin up per availability_zone. | number | `"1"` | no |
+| master\_password | Password for the master DB user. | string | n/a | yes |
+| master\_username | Username for the master DB user. | string | n/a | yes |
+| name | Unique cluster identifier beginning with the specified prefix. | string | n/a | yes |
+| parameters | additional parameters modified in parameter group | list(map(any)) | `[]` | no |
+| preferred\_backup\_window | The daily time range during which automated backups are created if automated backups are enabled using the BackupRetentionPeriod parameter. | string | `"07:00-09:00"` | no |
+| skip\_final\_snapshot | Determines whether a final DB snapshot is created before the DB cluster is deleted. | bool | `"false"` | no |
+| storage\_encrypted | Specifies whether the DB cluster is encrypted. | bool | `"true"` | no |
+
+## Inputs for MSK
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| client\_subnets | A list of subnets to connect to in client VPC | `list(string)` | n/a | yes |
+| cloudwatch\_logs\_group | Name of the Cloudwatch Log Group to deliver logs to. | `string` | `""` | no |
+| cluster\_name | Name of the MSK cluster. | `string` | n/a | yes |
+| encryption\_at\_rest\_kms\_key\_arn | You may specify a KMS key short ID or ARN (it will always output an ARN) to use for encrypting your data at rest. If no key is specified, an AWS managed KMS ('aws/msk' managed service) key will be used for encrypting the data at rest. | `string` | `""` | no |
+| encryption\_in\_transit\_client\_broker | Encryption setting for data in transit between clients and brokers. Valid values: TLS, TLS\_PLAINTEXT, and PLAINTEXT. Default value is TLS\_PLAINTEXT. | `string` | `"TLS_PLAINTEXT"` | no |
+| encryption\_in\_transit\_in\_cluster | Whether data communication among broker nodes is encrypted. Default value: true. | `bool` | `true` | no |
+| enhanced\_monitoring | Specify the desired enhanced MSK CloudWatch monitoring level to one of three monitoring levels: DEFAULT, PER\_BROKER, PER\_TOPIC\_PER\_BROKER or PER\_TOPIC\_PER\_PARTITION. See [Monitoring Amazon MSK with Amazon CloudWatch](https://docs.aws.amazon.com/msk/latest/developerguide/monitoring.html). | `string` | `"DEFAULT"` | no |
+| extra\_security\_groups | A list of extra security groups to associate with the elastic network interfaces to control who can communicate with the cluster. | `list(string)` | `[]` | no |
+| firehose\_logs\_delivery\_stream | Name of the Kinesis Data Firehose delivery stream to deliver logs to. | `string` | `""` | no |
+| instance\_type | Specify the instance type to use for the kafka brokers. e.g. kafka.m5.large. | `string` | n/a | yes |
+| kafka\_version | Specify the desired Kafka software version. | `string` | n/a | yes |
+| number\_of\_nodes | The desired total number of broker nodes in the kafka cluster. It must be a multiple of the number of specified client subnets. | `number` | n/a | yes |
+| prometheus\_jmx\_exporter | Indicates whether you want to enable or disable the JMX Exporter. | `bool` | `false` | no |
+| prometheus\_node\_exporter | Indicates whether you want to enable or disable the Node Exporter. | `bool` | `false` | no |
+| s3\_logs\_bucket | Name of the S3 bucket to deliver logs to. | `string` | `""` | no |
+| s3\_logs\_prefix | Prefix to append to the folder name. | `string` | `""` | no |
+| server\_properties | A map of the contents of the server.properties file. Supported properties are documented in the [MSK Developer Guide](https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration-properties.html). | `map(string)` | `{}` | no |
+| tags | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
+| volume\_size | The size in GiB of the EBS volume for the data drive on each broker node. | `number` | `1000` | no |
+
+## Inputs for RDS
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| rds\_sg\_id | The Security Group ID for RDS. | `string` | n/a | yes |
+| private\_subnets | The IDs of the Private Subnets. | `list(any)` | n/a | yes |
+| tags | A mapping of tags to assign to the resource. | `map(string)` | `{}` | no |
+| db\_identifier | The name of the RDS instance. | `string` | n/a | yes |
+| db\_name | The name of the database to create when the DB instance is created. | `string` | `null` | yes |
+| db\_username | Username for the master DB user. | `string` | n/a | yes |
+| db\_password | Password for the master DB user. | `string` | `""` | yes |
+| db\_instance\_class | The instance type of the RDS instance. | `string` | n/a | yes |
+| db\_engine | The database engine to use. | `string` | n/a | yes |
+| db\_engine\_version | The engine version to use. | `string` | n/a | yes |
+| db\_allocated\_storage | The amount of allocated storage. | `string` | n/a | yes |
+| db_multi_az | Does the DB need multi-az for High Availability. | `bool` | `false` | no |
+| backup_retention_period | The days to retain backups for. | `number` | `null` | no |
+| storage_encrypted | Specifies whether the DB instance is encrypted. | `bool` | `true` | no |
+| skip_final_snapshot | Determines whether a final DB snapshot is created before the DB instance is deleted. | `bool` | `true` | no |
+
+## Inputs for S3 Bucket
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| acl | (Optional) The canned ACL to apply. Defaults to 'private'. | `string` | `private` | no |
+| bucket\_name | Name of the S3 bucket to be created. | `string` | `` | yes |
+| force\_destroy\_bucket | A boolean that indicates all objects (including any locked objects) should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable. | `bool` | `true` | no |
+| versioning | A boolean that indicates if versioning to be enabled in S3 bucket. | `bool` | `{}` | no |
+| tags | A map of tags to add to all resources. | `map(string)` | `{}` | no |
+
+# Outputs
+
+## Outputs for Elasticsearch
 
 | Name | Description |
 |------|-------------|
-| vpc\_id | The ID of the VPC. |
-| public\_subnet\_a\_id | The ID of the Public Subnet A. |
-| public\_subnet\_b\_id | The ID of the Public Subnet B. |
-| private\_subnet\_a\_id | The ID of the Private Subnet A. |
-| private\_subnet\_b\_id | The ID of the Private Subnet B. |
-| private\_subnets | List of IDs of private subnets. |
-| public\_subnets | List of IDs of public subnets. |
-| alb\_sg\_id | The ID of the ALB Security Group. |
-| ecs\_sg\_id | The ID of the ECS Security Group. |
-| rds\_sg\_id | The ID of the RDS Security Group. |
-| http\_tcp\_listener\_arns | The ARN of the TCP and HTTP load balancer listeners created. |
-| http\_tcp\_listener\_ids | The IDs of the TCP and HTTP load balancer listeners created. |
-| https\_listener\_arns | The ARNs of the HTTPS load balancer listeners created. |
-| https\_listener\_ids | The IDs of the load balancer listeners created. |
-| target\_group\_arn\_suffixes | ARN suffixes of our target groups - can be used with CloudWatch. |
-| target\_group\_arns | ARNs of the target groups. Useful for passing to your Auto Scaling group. |
-| target\_group\_attachments | ARNs of the target group attachment IDs. |
-| target\_group\_names | Name of the target group. Useful for passing to your CodeDeploy Deployment Group. |
-| this\_lb\_arn | The ID and ARN of the load balancer we created. |
-| this\_lb\_arn\_suffix | ARN suffix of our load balancer - can be used with CloudWatch. |
-| this\_lb\_dns\_name | The DNS name of the load balancer. |
-| this\_lb\_id | The ID and ARN of the load balancer we created. |
-| this\_lb\_zone\_id | The zone\_id of the load balancer to assist with creating DNS records. |
-| cluster\_id | EMR cluster ID. |
-| cluster\_name | EMR cluster name. |
-| ec2\_role | Role name of EMR EC2 instances so users can attach more policies. |
-| master\_public\_dns | Master public DNS. |
-| ecs\_task\_execution\_role\_arn | The ARN for the ECS task execution role. |
-| ecs\_task\_role\_arn | The ARN for the ECS task role. |
-| rds\_address | The hostname of the RDS instance. |
-| ecs\_cluster\_arn | The Amazon Resource Name (ARN) that identifies the cluster. |
-| ecs\_service\_cluster | Amazon Resource Name (ARN) of cluster which the service runs on. |
-| ecs\_service\_id | ARN that identifies the service. |
-| ecs\_service\_name | Name of the service. |
-| ecs\_td\_arn | Full ARN of the Task Definition (including both family and revision) |
-| ecs\_td\_family | The family of the Task Definition. |
-| ecs\_td\_revision | The revision of the Task Definition. |
-| endpoint | Redis primary endpoint |
-| id | Redis cluster ID |
-| member\_clusters | Redis cluster members |
-| port | Redis port |
-| cloudfront\_arn | The ARN (Amazon Resource Name) for the distribution. |
-| cloudfront\_id | The identifier for the distribution. |
-| cloudfront\_domain\_name | The domain name corresponding to the distribution. |
-| BastionInstanceIP | Public IP of the bastion host. |
-| domain\_arn | ARN of the Elasticsearch domain |
-| domain\_id | Unique identifier for the Elasticsearch domain |
-| domain\_name | Name of the Elasticsearch domain |
-| domain\_endpoint | Domain-specific endpoint used to submit index, search, and data upload requests |
-| kibana\_endpoint | Domain-specific endpoint for Kibana without https scheme |
-| elasticsearch\_user\_iam\_role\_name | The name of the IAM role to allow access to Elasticsearch cluster |
-| elasticsearch\_user\_iam\_role\_arn | The ARN of the IAM role to allow access to Elasticsearch cluster |
+| elasticsearch\_domain\_arn | ARN of the Elasticsearch domain. |
+| elasticsearch\_domain\_id | Unique identifier for the Elasticsearch domain. |
+| elasticsearch\_domain\_name | Name of the Elasticsearch domain. |
+| elasticsearch\_domain\_endpoint | Domain-specific endpoint used to submit index, search, and data upload requests. |
+| elasticsearch\_kibana\_endpoint | Domain-specific endpoint for Kibana without https scheme. |
+
+## Outputs for DocumentDB
+
+| Name | Description |
+|------|-------------|
+| documentdb_arn | Amazon Resource Name (ARN) of the DocumentDB cluster. |
+| documentdb_cluster_members | List of DocDB Instances that are a part of this cluster. |
+| documentdb_cluster_resource_id | The DocDB Cluster Resource ID. |
+| documentdb_endpoint | The DNS address of the DocDB instance. |
+| documentdb_hosted_zone_id | The Route53 Hosted Zone ID of the endpoint. |
+| documentdb_id | The DocDB Cluster Identifier. |
+| documentdb_reader_endpoint | A read-only endpoint for the DocDB cluster, automatically load-balanced across replicas. |
+
+## Outputs for MSK
+
+| Name | Description |
+|------|-------------|
+| msk_cluster_arn | Amazon Resource Name (ARN) of the MSK cluster. |
+| msk_cluster_bootstrap_brokers | A comma separated list of one or more hostname:port pairs of kafka brokers suitable to boostrap connectivity to the kafka cluster. Only contains value if client_broker encryption in transit is set o PLAINTEXT or TLS_PLAINTEXT. |
+| msk_cluster_bootstrap_brokers_tls | A comma separated list of one or more DNS names (or IPs) and TLS port pairs kafka brokers suitable to boostrap connectivity to the kafka cluster. Only contains value if client_broker encryption in transit is set to TLS_PLAINTEXT or TLS. |
+| msk_cluster_current_version | Current version of the MSK Cluster used for updates. |
+| msk_cluster_encryption_at_rest_kms_key_arn | The ARN of the KMS key used for encryption at rest of the broker data volumes. |
+| msk_cluster_zookeeper_connect_string | A comma separated list of one or more hostname:port pairs to use to connect to the Apache Zookeeper cluster. |
+
+## Outputs for RDS
+
+| Name | Description |
+|------|-------------|
+| rds_address | The hostname of the RDS instance. |
+
+## Outputs for MSK
+
+| Name | Description |
+|------|-------------|
+| s3_bucket_id | The Id of the s3 bucket. |
