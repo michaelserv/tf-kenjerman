@@ -44,7 +44,7 @@ $ terraform plan
 $ terraform apply --auto-approve
 ```
 
-* **Step 4: Create your compute resources (Bastion and EKS cluster).** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** (lines 10 and 37) created in step 2 as well as the **state_bucket_region** (lines 12 and 39).
+* **Step 4: Create your compute resources (Bastion and EKS cluster).** Update the `terraform.tfvars` file with your inputs. Then update `main.tf` with the **state_bucket_id** (lines 38 and 65) created in step 2 as well as the **state_bucket_region** (lines 40 and 67).
 ```shell script
 $ cd ../layers/200compute
 $ vi terraform.tfvars
