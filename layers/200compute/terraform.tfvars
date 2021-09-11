@@ -9,7 +9,7 @@ region         = "XXXXXXXXXXXXXX" ### PLEASE UPDATE THE AWS REGION
 # Bastion
 ###############################################################################
 instance_type = "t3.micro"
-key_name      = "antonio-rackspace" ### PLEASE UPDATE TO YOUR KEY PAIR
+key_name      = "XXXXXXXXXXXXXX" ### PLEASE UPDATE TO YOUR KEY PAIR
 user_data     = <<EOF
 #!/bin/bash
 yum update -y
